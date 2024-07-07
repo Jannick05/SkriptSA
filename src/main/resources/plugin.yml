@@ -1,0 +1,5 @@
+name: SkriptSA
+version: '${project.version}'
+main: dk.nydt.skriptsa.SkriptSA
+softdepend:
+  - Skript
