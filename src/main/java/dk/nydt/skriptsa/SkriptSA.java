@@ -2,6 +2,8 @@ package dk.nydt.skriptsa;
 
 import ch.njol.skript.Skript;
 import dk.nydt.skriptsa.config.Config;
+import dk.nydt.skriptsa.storage.DBManager;
+import dk.nydt.skriptsa.storage.objects.Boosts;
 import dk.nydt.skriptsa.tasks.Updater;
 import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
@@ -12,6 +14,7 @@ import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public final class SkriptSA extends JavaPlugin {
     @Getter
@@ -22,6 +25,8 @@ public final class SkriptSA extends JavaPlugin {
     private static JSONObject json;
     @Getter
     private static Updater updater;
+    @Getter
+    private static DBManager dbManager;
 
     @Override
     public void onEnable() {
@@ -35,9 +40,11 @@ public final class SkriptSA extends JavaPlugin {
             it.load(true);
         });
 
+        dbManager = new DBManager();
+
         // Load the data from the API
         updater = new Updater();
-        updater.getData(); // Get the data once before starting the task
+        updater.setData(); // Get the data once before starting the task
         updater.run(); // Start the task
 
         if(getServer().getPluginManager().getPlugin("Skript") != null) try {
@@ -50,6 +57,7 @@ public final class SkriptSA extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        dbManager.saveBoost();
+        dbManager.close();
     }
 }

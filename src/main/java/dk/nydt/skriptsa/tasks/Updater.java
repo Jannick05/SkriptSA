@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import dk.nydt.skriptsa.SkriptSA;
 import dk.nydt.skriptsa.events.ServerBoost;
 import dk.nydt.skriptsa.events.ServerUnboost;
+import dk.nydt.skriptsa.storage.DBManager;
+import dk.nydt.skriptsa.storage.objects.Boosts;
 import lombok.Getter;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
@@ -16,6 +18,9 @@ import org.json.simple.parser.JSONParser;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
@@ -45,7 +50,7 @@ public class Updater {
         return this;
     }
 
-    public void getData() {
+    public void setData() {
         String url = "https://api.superawesome.dk/servers/" + serverName;
         try {
             JSONParser parser = new JSONParser();
@@ -89,8 +94,34 @@ public class Updater {
         previousBoosts = currentBoosts;
     }
 
+    public void saveData() throws SQLException {
+        DBManager.getBoostsDao().delete(DBManager.getBoosts());
+        for(Object boost : currentBoosts) {
+            JSONObject boostObject = (JSONObject) boost;
+            String uuid = boostObject.get("uuid").toString();
+            String username = boostObject.get("username").toString();
+            String since = boostObject.get("since").toString();
+            Boosts boosts = new Boosts(UUID.fromString(uuid), username, since);
+            DBManager.getBoostsDao().createOrUpdate(boosts);
+        }
+    }
+
     public void run() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(SkriptSA.getInstance(), this::getData, 0, updateInterval * 20L);
+
+        List<Boosts> boosts = DBManager.getBoosts();
+
+        JSONArray jsonArray = new JSONArray();
+        boosts.forEach(boost -> {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("uuid", boost.getUuid().toString());
+            jsonObject.put("username", boost.getUsername());
+            jsonObject.put("since", boost.getSince());
+            jsonArray.add(jsonObject);
+        });
+
+        previousBoosts = jsonArray;
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(SkriptSA.getInstance(), this::setData, 0, updateInterval * 20L);
     }
 
     public void stop() {
