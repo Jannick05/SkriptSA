@@ -1,4 +1,7 @@
 name: SkriptSA
+website: 'https://github.com/Jannick05/SkriptSA'
+authors:
+  - Nydt
 version: '${project.version}'
 main: dk.nydt.skriptsa.SkriptSA
 softdepend:
