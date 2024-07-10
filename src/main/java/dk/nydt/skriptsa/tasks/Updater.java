@@ -1,7 +1,5 @@
 package dk.nydt.skriptsa.tasks;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import dk.nydt.skriptsa.SkriptSA;
 import dk.nydt.skriptsa.events.ServerBoost;
 import dk.nydt.skriptsa.events.ServerUnboost;
@@ -11,7 +9,6 @@ import lombok.Getter;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,9 +16,10 @@ import org.json.simple.parser.JSONParser;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 public class Updater {
@@ -65,34 +63,37 @@ public class Updater {
     public void checkBoost() {
         JSONObject json = SkriptSA.getJson();
         currentBoosts = (JSONArray) json.get("serverBoosts");
+        if(currentBoosts == null) {
+            return;
+        }
 
         if (previousBoosts == null) {
             previousBoosts = currentBoosts;
         }
 
-        if (currentBoosts.size() > previousBoosts.size()) {
-            for(Object boost : currentBoosts) {
-                JSONObject boostObject = (JSONObject) boost;
-                if (!previousBoosts.toString().contains(boostObject.toString())) {
-                    Bukkit.getScheduler().runTaskAsynchronously(SkriptSA.getInstance(), () -> {
-                        OfflinePlayer player = Bukkit.getOfflinePlayer(boostObject.get("username").toString());
-                        Bukkit.getServer().getPluginManager().callEvent(new ServerBoost(player, currentBoosts.size()));
-                    });
-                }
-            }
-        } else if (currentBoosts.size() < previousBoosts.size()){
-            for(Object boost : previousBoosts) {
-                JSONObject boostObject = (JSONObject) boost;
-                if (!currentBoosts.toString().contains(boostObject.toString())) {
-                    Bukkit.getScheduler().runTaskAsynchronously(SkriptSA.getInstance(), () -> {
-                        OfflinePlayer player = Bukkit.getOfflinePlayer(boostObject.get("username").toString());
-                        Bukkit.getServer().getPluginManager().callEvent(new ServerUnboost(player, currentBoosts.size()));
-                    });
-                }
+        for(Object boost : currentBoosts) {
+            JSONObject boostObject = (JSONObject) boost;
+            if (!previousBoosts.toString().contains(boostObject.toString())) {
+                Bukkit.getScheduler().runTaskAsynchronously(SkriptSA.getInstance(), () -> {
+                    OfflinePlayer player = Bukkit.getOfflinePlayer(boostObject.get("username").toString());
+                    Bukkit.getServer().getPluginManager().callEvent(new ServerBoost(player, currentBoosts.size()));
+                });
             }
         }
+
+        for(Object boost : previousBoosts) {
+            JSONObject boostObject = (JSONObject) boost;
+            if (!currentBoosts.toString().contains(boostObject.toString())) {
+                Bukkit.getScheduler().runTaskAsynchronously(SkriptSA.getInstance(), () -> {
+                    OfflinePlayer player = Bukkit.getOfflinePlayer(boostObject.get("username").toString());
+                    Bukkit.getServer().getPluginManager().callEvent(new ServerUnboost(player, currentBoosts.size()));
+                });
+            }
+        }
+
         previousBoosts = currentBoosts;
     }
+
 
     public void saveData() throws SQLException {
         DBManager.getBoostsDao().delete(DBManager.getBoosts());

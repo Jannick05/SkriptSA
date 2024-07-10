@@ -10,10 +10,7 @@ import java.util.UUID;
 @DatabaseTable(tableName = "boosts")
 public class Boosts {
     @Getter @Setter
-    @DatabaseField(generatedId = true, columnName = "id")
-    private int id;
-    @Getter @Setter
-    @DatabaseField(columnName = "uuid")
+    @DatabaseField(id = true, columnName = "uuid")
     private UUID uuid;
     @Getter @Setter
     @DatabaseField(columnName = "username")
