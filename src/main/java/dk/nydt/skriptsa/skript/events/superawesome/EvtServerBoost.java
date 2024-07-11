@@ -1,4 +1,4 @@
-package dk.nydt.skriptsa.skript.events;
+package dk.nydt.skriptsa.skript.events.superawesome;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;

@@ -6,7 +6,7 @@
 
     <groupId>dk.nydt</groupId>
     <artifactId>SkriptSA</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <name>SkriptSA</name>
@@ -89,6 +89,12 @@
             <groupId>com.github.SkriptLang</groupId>
             <artifactId>Skript</artifactId>
             <version>2.7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>1.5.25</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

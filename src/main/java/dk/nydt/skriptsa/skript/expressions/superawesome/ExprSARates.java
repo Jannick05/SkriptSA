@@ -1,4 +1,4 @@
-package dk.nydt.skriptsa.skript.expressions;
+package dk.nydt.skriptsa.skript.expressions.superawesome;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import dk.nydt.skriptsa.utils.MutalUtils;

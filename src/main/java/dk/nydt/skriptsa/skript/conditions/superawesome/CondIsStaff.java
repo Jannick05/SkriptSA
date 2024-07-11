@@ -1,4 +1,4 @@
-package dk.nydt.skriptsa.skript.conditions;
+package dk.nydt.skriptsa.skript.conditions.superawesome;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
 import dk.nydt.skriptsa.utils.MutalUtils;
