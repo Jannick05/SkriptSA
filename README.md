@@ -11,9 +11,9 @@ command /info <offline player>:
         send "VIP dage: %arg-1's vip days%"
         send "STAFF role: %arg-1's role%"
         send "Rates: %arg-1's rates%"
-        if arg-1 is staff:
+        if arg-1 is staff: #Tjekker om spilleren er SuperAwesome Staff
             send "Staff: Ja"
-        if arg-1 is vip:
+        if arg-1 is vip: #Tjekker om spilleren er SuperAwesome VIP
             send "VIP: Ja"
         send "%9 er hvilken procent af 300%"
         send "%hvad er 25 procent af 400%"
