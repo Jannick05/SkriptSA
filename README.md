@@ -1,4 +1,4 @@
-#Eksempel på hvad Addonet kan
+# Eksempel på hvad Addonet kan
 ```VBScript
 on serverboost:
     broadcast "%event-offlineplayer% boostede serveren og den har nu %event-integer%"
