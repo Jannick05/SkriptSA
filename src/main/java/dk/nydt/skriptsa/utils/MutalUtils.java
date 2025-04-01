@@ -1,6 +1,7 @@
 package dk.nydt.skriptsa.utils;
 
 import dk.nydt.skriptsa.SkriptSA;
+import dk.nydt.skriptsa.storage.DBManager;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
@@ -52,5 +53,9 @@ public class MutalUtils {
 
     public static boolean isPlayerStaff(String name) {
         return !(Objects.equals(getStaffRole(name), "player"));
+    }
+
+    public static boolean isPlayerServerbooster(String name) {
+        return DBManager.hasBoost(name);
     }
 }

@@ -39,6 +39,16 @@ public class DBManager {
         }
         return null;
     }
+
+    public static boolean hasBoost(String name) {
+        try {
+            return boostsDao.queryForEq("username", name).size() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public void close() {
         try {
             connectionSource.close();
