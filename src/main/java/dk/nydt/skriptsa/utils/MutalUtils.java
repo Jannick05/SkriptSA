@@ -23,6 +23,14 @@ public class MutalUtils {
         return null;
     }
 
+    public static Long getPlayerPoints(String name) {
+        JSONObject json = getPlayerData(name);
+        if (json == null || json.get("playerPoints") == null) {
+            return (long) -1;
+        }
+        return (Long) json.get("playerPoints");
+    }
+
     public static Long getRatings(String name) {
         JSONObject json = getPlayerData(name);
         if (json == null || json.get("rate") == null) {
