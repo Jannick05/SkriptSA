@@ -2,6 +2,7 @@ package dk.nydt.skriptsa;
 
 import ch.njol.skript.Skript;
 import dk.nydt.skriptsa.config.Config;
+import dk.nydt.skriptsa.listeners.PlayerJoinListener;
 import dk.nydt.skriptsa.storage.DBManager;
 import dk.nydt.skriptsa.storage.objects.Boosts;
 import dk.nydt.skriptsa.tasks.Updater;
@@ -31,6 +32,8 @@ public final class SkriptSA extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
         configuration = ConfigManager.create(Config.class, (it) -> {
             it.withConfigurer(new YamlBukkitConfigurer());

@@ -49,15 +49,17 @@ public class Updater {
     }
 
     public void setData() {
-        String url = "https://api.superawesome.dk/servers/" + serverName;
-        try {
-            JSONParser parser = new JSONParser();
-            JSONObject json = (JSONObject) parser.parse(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
-            SkriptSA.setJson(json);
-            checkBoost();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(SkriptSA.getInstance(), () -> {
+            String url = "https://api.superawesome.dk/servers/" + serverName;
+            try {
+                JSONParser parser = new JSONParser();
+                JSONObject json = (JSONObject) parser.parse(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
+                SkriptSA.setJson(json);
+                checkBoost();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void checkBoost() {
